@@ -847,7 +847,9 @@
             }
 
             // Build final short URL (House A logic)
-            currentShortUrl = `${API_BASE}/${data.shortCode}`;
+            // currentShortUrl = `${API_BASE}/${data.shortCode}`;
+            currentShortUrl = `${window.location.origin}/${data.shortCode}`;
+
             shortUrl.textContent = currentShortUrl;
 
             resultCard.classList.remove('hidden');
