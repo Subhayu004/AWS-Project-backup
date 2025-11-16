@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type ="image/png" href="/assests/logo2.jpg">
+    <link rel="icon" type ="image/png" href="/assests/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TinyLink - Premium URL Shortener</title>
@@ -137,7 +137,7 @@
             }
         }
 
-        .pulse-glow {
+        /* .pulse-glow {
             animation: pulseGlow 2s ease-in-out infinite;
         }
 
@@ -148,7 +148,19 @@
             50% {
                 box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
             }
-        }
+        } */
+         .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+    }
+}
 
         .loading {
             display: inline-block;
@@ -514,14 +526,16 @@
     color: #6d28d9;
 }
 
+/*Dark Mode Button Style*/
+
 /* Theme Toggle Styles */
 .theme-toggle {
     background: var(--bg-glass);
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-glass);
     border-radius: 50%;
-    width: 48px;
-    height: 48px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -610,6 +624,69 @@
         transition-delay: .25s;
     }
 }
+                        /* History Section Styles */
+                .history-item {
+                    background: rgba(255, 255, 255, 0.03);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    border-radius: 16px;
+                    padding: 1rem;
+                    transition: all 0.3s ease;
+                }
+
+                .history-item:hover {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(102, 126, 234, 0.3);
+                    transform: translateX(4px);
+                }
+
+                [data-theme="light"] .history-item {
+                    background: rgba(0, 0, 0, 0.02);
+                    border: 1px solid rgba(0, 0, 0, 0.08);
+                }
+
+                [data-theme="light"] .history-item:hover {
+                    background: rgba(0, 0, 0, 0.04);
+                    border-color: rgba(124, 58, 237, 0.3);
+                }
+
+                .history-url {
+                    color: var(--text-secondary);
+                    font-size: 0.875rem;
+                    word-break: break-all;
+                    line-height: 1.4;
+                }
+
+                .history-short-url {
+                    color: #a78bfa;
+                    font-size: 0.875rem;
+                    font-family: 'Monaco', 'Courier New', monospace;
+                    word-break: break-all;
+                }
+
+                [data-theme="light"] .history-short-url {
+                    color: #7c3aed;
+                }
+
+                .delete-btn {
+                    background: rgba(239, 68, 68, 0.1);
+                    border: 1px solid rgba(239, 68, 68, 0.2);
+                    color: #ef4444;
+                    padding: 0.5rem;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    flex-shrink: 0;
+                }
+
+                .delete-btn:hover {
+                    background: rgba(239, 68, 68, 0.2);
+                    border-color: rgba(239, 68, 68, 0.4);
+                    transform: scale(1.05);
+                }
+
+                .history-empty {
+                    animation: fadeIn 0.5s ease-out;
+                }
     </style>
 </head>
 <body>
@@ -655,7 +732,7 @@
         <!-- Hero Section -->
         <div class="relative z-10 max-w-5xl mx-auto px-6 pt-20 pb-32">
             <div class="text-center mb-16 fade-in">
-                <h1 class="hero-title text-5xl md:text-7xl font-bold mb-6">
+                <h1 class="hero-title text-5xl md:text-6xl font-bold mb-6">
                     Shorten URLs.<br/>Amplify Impact.
                 </h1>
                 <p class="hero-subtitle text-xl md:text-2xl mb-4">
@@ -783,7 +860,29 @@
                 </div>
             </div>
         </div>
-
+         <!-- History Section -->
+            <div class="mt-16 fade-in">
+                <div class="glass-strong rounded-3xl p-8 md:p-12 pulse-glow">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white">History</h2>
+                        <button id="clearAllBtn" class="btn-secondary px-4 py-2 rounded-xl text-white font-medium flex items-center space-x-2 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            <span>Clear All</span>
+                        </button>
+                    </div>
+                    
+                    <div id="historyContainer" class="space-y-3">
+                        <div class="text-center py-12 text-gray-400">
+                            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p>No history yet. Start shortening URLs!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-divider"></div>
@@ -936,6 +1035,160 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({m
     theme.value = isDark ? 'dark' : 'light';
     setPreference();
 });
+                    // ===== HISTORY MANAGEMENT =====
+const STORAGE_KEY = 'tinylink_history';
+
+// Load history from localStorage
+function loadHistory() {
+    const history = localStorage.getItem(STORAGE_KEY);
+    return history ? JSON.parse(history) : [];
+}
+
+// Save history to localStorage
+function saveHistory(history) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+}
+
+// Add item to history
+function addToHistory(longUrl, shortUrl) {
+    const history = loadHistory();
+    
+    // Check if URL already exists
+    const exists = history.some(item => item.longUrl === longUrl);
+    if (exists) return;
+    
+    // Add new item at the beginning
+    history.unshift({
+        id: Date.now(),
+        longUrl,
+        shortUrl,
+        timestamp: new Date().toISOString()
+    });
+    
+    // Keep only last 50 items
+    if (history.length > 50) history.pop();
+    
+    saveHistory(history);
+    renderHistory();
+}
+
+// Delete item from history
+function deleteFromHistory(id) {
+    const history = loadHistory();
+    const filtered = history.filter(item => item.id !== id);
+    saveHistory(filtered);
+    renderHistory();
+}
+
+// Clear all history
+function clearAllHistory() {
+    if (confirm('Are you sure you want to clear all history?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderHistory();
+    }
+}
+
+// Render history items
+function renderHistory() {
+    const history = loadHistory();
+    const container = document.getElementById('historyContainer');
+    
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12 text-gray-400 history-empty">
+                <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p>No history yet. Start shortening URLs!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = history.map(item => `
+        <div class="history-item" data-id="${item.id}">
+            <div class="flex items-start gap-4">
+                <div class="flex-1 min-w-0">
+                    <div class="mb-2">
+                        <span class="text-gray-400 text-xs font-medium">Original URL</span>
+                        <p class="history-url mt-1">${item.longUrl}</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 text-xs font-medium">Short URL</span>
+                        <p class="history-short-url mt-1">${item.shortUrl}</p>
+                    </div>
+                </div>
+                <button class="delete-btn" onclick="deleteFromHistory(${item.id})" title="Delete">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== UPDATE SHORTEN FUNCTION =====
+// Modify your existing shortenUrl() function to add this line after successful shortening:
+// Add this line after: currentShortUrl = `${window.location.origin}/${data.shortCode}`;
+// addToHistory(longUrl, currentShortUrl);
+
+// Update the shortenUrl function's success block:
+async function shortenUrl() {
+    const longUrl = urlInput.value.trim();
+
+    if (!longUrl) {
+        alert('Please enter a URL');
+        return;
+    }
+
+    if (!isValidUrl(longUrl)) {
+        alert('Please enter a valid URL starting with http:// or https://');
+        return;
+    }
+
+    btnText.classList.add('hidden');
+    btnLoading.classList.remove('hidden');
+    shortenBtn.disabled = true;
+    resultCard.classList.add('hidden');
+
+    try {
+        const response = await fetch(`${API_BASE}/shorten`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ longUrl })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.shortCode) {
+            throw new Error(data.error || 'Failed to shorten URL');
+        }
+
+        currentShortUrl = `${window.location.origin}/${data.shortCode}`;
+        shortUrl.textContent = currentShortUrl;
+        
+        // Add to history
+        addToHistory(longUrl, currentShortUrl);
+
+        resultCard.classList.remove('hidden');
+        resultCard.classList.add('fade-in');
+
+    } catch (err) {
+        alert(err.message || 'An error occurred');
+        console.error(err);
+    } finally {
+        btnText.classList.remove('hidden');
+        btnLoading.classList.add('hidden');
+        shortenBtn.disabled = false;
+    }
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById('clearAllBtn').addEventListener('click', clearAllHistory);
+
+// Load history on page load
+window.addEventListener('DOMContentLoaded', renderHistory);
     </script>
 
 </body>
