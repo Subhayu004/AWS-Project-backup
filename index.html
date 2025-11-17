@@ -102,6 +102,10 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
+        /* Make Clear All button dark text in light mode */
+        [data-theme="light"] .btn-secondary {
+            color: #3d454fce;  /* dark button text */
+        }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.15);
@@ -114,6 +118,15 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
+        /* Fix input text color in light mode */
+        [data-theme="light"] .input-glass {
+            color: #1f2937; /* dark text */
+        }
+
+        [data-theme="light"] .input-glass::placeholder {
+            color: #6b7280; /* softer dark placeholder */
+        }
+
 
         .input-glass:focus {
             background: rgba(255, 255, 255, 0.08);
@@ -262,7 +275,7 @@
     animation: heroGlowLight 3s ease-in-out infinite;
 }
 
-@keyframes heroGlowLight {
+/* @keyframes heroGlowLight {
     0%, 100% {
         text-shadow: 0 0 15px rgba(124, 58, 237, 0.4),
                      0 0 30px rgba(124, 58, 237, 0.3),
@@ -270,8 +283,19 @@
     }
     50% {
         text-shadow: 0 0 25px rgba(124, 58, 237, 0.6),
-                     0 0 50px rgba(124, 58, 237, 0.5),
-                     0 0 75px rgba(124, 58, 237, 0.3);
+                     0 0 46px rgba(124, 58, 237, 0.5),
+                     0 0 72px rgba(124, 58, 237, 0.3);
+    }
+} */
+/*Text Color Glowing - Manipulate it */
+@keyframes heroGlowLight {
+    0%, 100% {
+        text-shadow: 0 0 6px rgba(124, 58, 237, 0.25),
+                     0 0 12px rgba(124, 58, 237, 0.15);
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(124, 58, 237, 0.3),
+                     0 0 20px rgba(124, 58, 237, 0.2);
     }
 }
 
@@ -283,6 +307,10 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        [data-theme="light"] .hero-subtitle {
+        color: #9c69f4e7 !important;
+        -webkit-text-fill-color: #9c63ff !important;
+    }
 
         .feature-card {
             position: relative;
@@ -687,6 +715,11 @@
                 .history-empty {
                     animation: fadeIn 0.5s ease-out;
                 }
+                /* Make the label black in light mode */
+                [data-theme="light"] label {
+                    color: #404752a8 !important;
+}
+
     </style>
 </head>
 <body>
