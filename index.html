@@ -1225,19 +1225,19 @@
 
             // ===== URL VALIDATION =====
             // ===== URL VALIDATION =====
-function isValidUrl(url) {
-    // Basic check for domain pattern
-    const urlPattern = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(\/.*)?$/i;
-    return urlPattern.test(url);
-}
+            function isValidUrl(url) {
+                // Basic check for domain pattern
+                const urlPattern = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(\/.*)?$/i;
+                return urlPattern.test(url);
+            }
 
-function normalizeUrl(url) {
-    // Add https:// if no protocol is present
-    if (!/^https?:\/\//i.test(url)) {
-        return 'https://' + url;
-    }
-    return url;
-}
+            function normalizeUrl(url) {
+                // Add https:// if no protocol is present
+                if (!/^https?:\/\//i.test(url)) {
+                    return 'https://' + url;
+                }
+                return url;
+            }
 
             // ===== MAIN SHORTEN FUNCTION =====
             async function shortenUrl() {
@@ -1257,27 +1257,27 @@ function normalizeUrl(url) {
                 }
 
                 if (!isValidUrl(longUrl)) {
-    // Show error and shake
-    urlInput.classList.add('shake');
-    errorMessage.classList.add('show');
-    setTimeout(() => urlInput.classList.remove('shake'), 500);
-    return;
-}
+                    // Show error and shake
+                    urlInput.classList.add('shake');
+                    errorMessage.classList.add('show');
+                    setTimeout(() => urlInput.classList.remove('shake'), 500);
+                    return;
+                }
 
-// Normalize the URL (add https:// if missing)
-const normalizedUrl = normalizeUrl(longUrl);
+                // Normalize the URL (add https:// if missing)
+                const normalizedUrl = normalizeUrl(longUrl);
 
-// Show loading overlay
-document.getElementById('loadingOverlay').classList.add('active');
-shortenBtn.disabled = true;
-resultCard.classList.add('hidden');
+                // Show loading overlay
+                document.getElementById('loadingOverlay').classList.add('active');
+                shortenBtn.disabled = true;
+                resultCard.classList.add('hidden');
 
-try {
-    const response = await fetch(`${API_BASE}/shorten`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ longUrl: normalizedUrl })
-    });
+                try {
+                    const response = await fetch(`${API_BASE}/shorten`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ longUrl: normalizedUrl })
+                    });
 
                     const data = await response.json();
 
