@@ -1052,11 +1052,167 @@
         .delete-all-btn:active .icon svg {
             transform: scale(0.8);
         }
+        /* Custom Confirmation Modal */
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.confirmation-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirmation-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+[data-theme="light"] .confirmation-box {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.confirmation-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.2);
+    border-radius: 50%;
+}
+
+.confirmation-icon svg {
+    width: 30px;
+    height: 30px;
+    color: #ef4444;
+}
+
+.confirmation-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+[data-theme="light"] .confirmation-title {
+    color: #1f2937;
+}
+
+.confirmation-message {
+    font-size: 0.95rem;
+    color: #d1d5db;
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .confirmation-message {
+    color: #6b7280;
+}
+
+.confirmation-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.confirm-btn,
+.cancel-btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.confirm-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="light"] .cancel-btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: #1f2937;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .cancel-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
     </style>
 </head>
 
 <body>
     <!-- Experiment 2 -->
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-box">
+            <div class="confirmation-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 class="confirmation-title" id="confirmTitle">Delete Item?</h3>
+            <p class="confirmation-message" id="confirmMessage">This action cannot be undone.</p>
+            <div class="confirmation-buttons">
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+                <button class="confirm-btn" id="confirmBtn">Delete</button>
+            </div>
+        </div>
+    </div>
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loader">
@@ -1469,20 +1625,64 @@
                 saveHistory(history);
                 renderHistory();
             }
+let confirmCallback = null;
 
-            function deleteFromHistory(id) {
-                const history = loadHistory();
-                const filtered = history.filter(item => item.id !== id);
-                saveHistory(filtered);
-                renderHistory();
-            }
+function showConfirmation(title, message, onConfirm) {
+    const modal = document.getElementById('confirmationModal');
+    const confirmTitle = document.getElementById('confirmTitle');
+    const confirmMessage = document.getElementById('confirmMessage');
+    
+    confirmTitle.textContent = title;
+    confirmMessage.textContent = message;
+    modal.classList.add('active');
+    
+    confirmCallback = onConfirm;
+}
 
-            function clearAllHistory() {
-                if (confirm('Are you sure you want to clear all history?')) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    renderHistory();
-                }
-            }
+function hideConfirmation() {
+    const modal = document.getElementById('confirmationModal');
+    modal.classList.remove('active');
+    confirmCallback = null;
+}
+
+function deleteFromHistory(id) {
+    showConfirmation(
+        'Delete This Link?',
+        'Are you sure you want to remove this shortened link from your history?',
+        () => {
+            const history = loadHistory();
+            const filtered = history.filter(item => item.id !== id);
+            saveHistory(filtered);
+            renderHistory();
+            hideConfirmation();
+        }
+    );
+}
+
+function clearAllHistory() {
+    showConfirmation(
+        'Delete All History?',
+        'Are you sure you want to clear all your shortened links? This action cannot be undone.',
+        () => {
+            localStorage.removeItem(STORAGE_KEY);
+            renderHistory();
+            hideConfirmation();
+        }
+    );
+}
+document.getElementById('confirmBtn').addEventListener('click', () => {
+    if (confirmCallback) {
+        confirmCallback();
+    }
+});
+
+document.getElementById('cancelBtn').addEventListener('click', hideConfirmation);
+
+document.getElementById('confirmationModal').addEventListener('click', (e) => {
+    if (e.target.id === 'confirmationModal') {
+        hideConfirmation();
+    }
+});
 
             function renderHistory() {
                 const history = loadHistory();
