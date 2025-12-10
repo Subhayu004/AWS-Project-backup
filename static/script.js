@@ -354,3 +354,59 @@ function rotatingTypeWriter() {
 }
 
 window.addEventListener('load', rotatingTypeWriter);
+
+// ===== SOCIAL MEDIA SHARING =====
+function setupSocialSharing() {
+    const shareTooltips = document.querySelectorAll('[data-share]');
+    
+    shareTooltips.forEach(tooltip => {
+        tooltip.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const platform = tooltip.getAttribute('data-share');
+            const url = encodeURIComponent(currentShortUrl || window.location.href);
+            const text = encodeURIComponent('Check out this link!');
+            
+            let shareUrl = '';
+            
+            switch(platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${text}%20${url}`;
+                    break;
+                case 'discord':
+                    // Discord doesn't have direct share URL, copy to clipboard instead
+                    navigator.clipboard.writeText(currentShortUrl);
+                    alert('Link copied! Paste it in Discord.');
+                    return;
+                case 'pinterest':
+                    shareUrl = `https://pinterest.com/pin/create/button/?url=${url}&description=${text}`;
+                    break;
+                case 'dribbble':
+                    // Dribbble doesn't have direct share URL, copy to clipboard instead
+                    navigator.clipboard.writeText(currentShortUrl);
+                    alert('Link copied! Share it on Dribbble.');
+                    return;
+                case 'github':
+                    // GitHub doesn't have direct share URL, copy to clipboard instead
+                    navigator.clipboard.writeText(currentShortUrl);
+                    alert('Link copied! Share it on GitHub.');
+                    return;
+                case 'reddit':
+                    shareUrl = `https://reddit.com/submit?url=${url}&title=${text}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        });
+    });
+}
+
+// Initialize social sharing when page loads
+window.addEventListener('load', setupSocialSharing);
